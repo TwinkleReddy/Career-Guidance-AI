@@ -34,7 +34,8 @@ export default function RootLayout({ children }) {
         <body suppressHydrationWarning>
           <ThemeProvider
             attribute="class"
-            defaultTheme="dark"
+            defaultTheme="light"
+            forcedTheme="light"
             enableSystem
             disableTransitionOnChange
           >
