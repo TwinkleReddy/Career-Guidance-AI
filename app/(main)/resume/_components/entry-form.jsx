@@ -90,7 +90,6 @@ export function EntryForm({ type, entries, onChange }) {
   // Replace handleImproveDescription with this
   const handleImproveDescription = async () => {
     const description = watch("description");
-    const organization = watch("organization")
     if (!description) {
       toast.error("Please enter a description first");
       return;
@@ -99,7 +98,6 @@ export function EntryForm({ type, entries, onChange }) {
     await improveWithAIFn({
       current: description,
       type: type.toLowerCase(), // 'experience', 'education', or 'project'
-      organization,
     });
   };
 

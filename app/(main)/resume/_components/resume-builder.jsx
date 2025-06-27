@@ -148,11 +148,11 @@ export default function ResumeBuilder({ initialContent }) {
 
   return (
     <div data-color-mode="light" className="space-y-4">
-      <div className="flex flex-col md:flex-row justify-between items-center gap-2">
-        <h1 className="font-bold gradient-title text-5xl md:text-6xl">
+      <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+        <h1 className="font-bold gradient-title text-4xl md:text-6xl">
           Resume Builder
         </h1>
-        <div className="space-x-2">
+        <div className="space-x-4">
           <Button
             variant="destructive"
             onClick={handleSubmit(onSubmit)}
@@ -401,7 +401,8 @@ export default function ResumeBuilder({ initialContent }) {
               preview={resumeMode}
             />
           </div>
-          <div className="hidden">
+        </TabsContent>
+        <div className="hidden">
             <div id="resume-pdf">
               <MDEditor.Markdown
                 source={previewContent}
@@ -412,7 +413,6 @@ export default function ResumeBuilder({ initialContent }) {
               />
             </div>
           </div>
-        </TabsContent>
       </Tabs>
     </div>
   );

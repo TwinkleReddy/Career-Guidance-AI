@@ -57,9 +57,8 @@ export async function getResume() {
   });
 }
 
-export async function improveWithAI({ current, type, organization }) {
+export async function improveWithAI({ current, type }) {
   const { userId } = await auth();
-  console.log(organization);
   if (!userId) throw new Error("Unauthorized");
 
   const user = await db.user.findUnique({
@@ -72,22 +71,20 @@ export async function improveWithAI({ current, type, organization }) {
   if (!user) throw new Error("User not found");
 
   const prompt = `
-As an expert resume writer, improve the following ${type} description for a ${user.industry} professional who worked at ${organization}.
-Make it more impactful, quantifiable, and aligned with industry standards.
+    As an expert resume writer, improve the following ${type} description for a ${user.industry} professional.
+    Make it more impactful, quantifiable, and aligned with industry standards.
+    Current content: "${current}"
 
-Current content: "${current}"
-
-Requirements:
-1. Use action verbs
-2. Include metrics and results where possible
-3. Highlight relevant technical skills
-4. Keep it concise but detailed
-5. Focus on achievements over responsibilities
-6. Use industry-specific keywords
-7. response should have ${organization} definitely
-
-Format the response as a single paragraph without any additional text or explanations.
-`;
+    Requirements:
+    1. Use action verbs
+    2. Include metrics and results where possible
+    3. Highlight relevant technical skills
+    4. Keep it concise but detailed
+    5. Focus on achievements over responsibilities
+    6. Use industry-specific keywords
+    
+    Format the response as a single paragraph without any additional text or explanations.
+  `;
 
   try {
     const result = await model.generateContent(prompt);
