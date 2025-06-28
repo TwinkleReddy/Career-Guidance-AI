@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🐝 BumbleBee AI – Your Smart Career Coach
 
-## Getting Started
+BumbleBee AI is a modern, AI-powered web application designed to help job seekers enhance their careers. Powered by Gemini AI and real-time industry data, BumbleBee AI provides tools to improve resumes, generate personalized cover letters, simulate job interviews, and gain actionable market insights — all wrapped in a secure, scalable, and beautifully designed platform.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+- ✨ **Resume Enhancer** – Get smart resume suggestions and formatting help.
+- 📝 **Cover Letter Generator** – Tailored letters using Gemini AI.
+- 🎤 **Interview Prep Assistant** – Practice questions with AI-based feedback.
+- 📊 **Industry Insights** – Market data, skill trends, and salary ranges.
+- 🔐 **Clerk Auth** – Secure user authentication and profile management.
+- 🔄 **Inngest Integration** – Handles async tasks like email reminders, PDF generation, and analytics.
+
+---
+
+## 🧰 Tech Stack
+
+| Technology         | Purpose                                                |
+|--------------------|--------------------------------------------------------|
+| **Next.js**        | React-based fullstack framework                        |
+| **JavaScript**     | Language used throughout the app                       |
+| **Prisma ORM**     | Type-safe database access layer                        |
+| **Neon DB**        | Serverless PostgreSQL database                         |
+| **PostgreSQL**     | Primary relational database                            |
+| **Gemini AI API**  | Google’s LLM for resume, cover letter, and Q&A tasks   |
+| **Tailwind CSS**   | Utility-first styling framework                        |
+| **Clerk**          | Authentication and user management                     |
+| **Inngest**        | Event-driven background jobs and scheduling            |
+
+---
+
+## 🛠️ Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/bumblebee-ai.git
+cd bumblebee-ai
+```
+
+``` bash 
+npm install
+```
+
+```bash
+DATABASE_URL="your_neon_db_connection_string"
+GEMINI_API_KEY="your_gemini_api_key"
+NEXTAUTH_SECRET="your_auth_secret"
+```
+
+```bash
+npx prisma generate
+npx prisma migrate dev
+```
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🤖 Gemini AI Integration
+BumbleBee AI uses Gemini AI API to:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+🧠 Analyze and improve resume content
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+🧾 Generate custom cover letters based on role and tone
 
-## Learn More
+🎯 Simulate job interviews for user-specific roles
 
-To learn more about Next.js, take a look at the following resources:
+📈 Provide market insights using LLM-powered knowledge
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Gemini API is provided by Google. Learn more here.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+📣 Acknowledgements
+1. Gemini API
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. Next.js
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. Prisma
+
+4. Neon Database
+
+5. Tailwind CSS
+
+6. Zod
