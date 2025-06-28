@@ -40,9 +40,14 @@ git clone https://github.com/yourusername/bumblebee-ai.git
 cd bumblebee-ai
 ```
 
+
+### 1. Install the dependencies
+
 ``` bash 
 npm install
 ```
+
+### 1. Environmental variables
 
 ```bash
 DATABASE_URL="your_neon_db_connection_string"
@@ -50,10 +55,14 @@ GEMINI_API_KEY="your_gemini_api_key"
 NEXTAUTH_SECRET="your_auth_secret"
 ```
 
+### 1. Prisma db generation and migration
+
 ```bash
 npx prisma generate
 npx prisma migrate dev
 ```
+
+### 1. Running the application
 
 ```bash
 npm run dev
