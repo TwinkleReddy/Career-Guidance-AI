@@ -49,7 +49,6 @@ export default function CoverLetterEdit({ initialContent }) {
   return (
     <div data-color-mode="light" className="space-y-4">
       <div className="flex justify-between items-start gap-4">
-        <h1 className="text-3xl font-bold">Cover Letter</h1>
         <div className="space-x-2">
           <Button onClick={handleSave} disabled={isSaving}>
             {isSaving ? (

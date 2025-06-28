@@ -15,7 +15,7 @@ export default function NewCoverLetterPage() {
         </Link>
 
         <div className="pb-6">
-          <h1 className="text-4xl md:text-6xl font-bold gradient-title">
+          <h1 className="text-3xl md:text-6xl font-bold gradient-title">
             Create Cover Letter
           </h1>
           <p className="text-muted-foreground md:px-2">
