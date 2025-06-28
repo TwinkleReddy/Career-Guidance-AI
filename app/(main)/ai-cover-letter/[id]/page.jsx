@@ -22,7 +22,7 @@ export default async function EditCoverLetterPage({ params, searchParams }) {
           </Button>
         </Link>
 
-        <h1 className="text-6xl font-bold gradient-title mb-6">
+        <h1 className="text-4xl md:text-6xl font-bold gradient-title mb-6">
           {coverLetter?.jobTitle} at {coverLetter?.companyName}
         </h1>
       </div>

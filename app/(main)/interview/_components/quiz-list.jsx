@@ -27,16 +27,16 @@ export default function QuizList({ assessments }) {
     <>
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row items-center justify-between">
             <div>
               <CardTitle className="gradient-title text-3xl md:text-4xl">
                 Recent Quizzes
               </CardTitle>
-              <CardDescription>
+              <CardDescription className='mt-2 md:mt-0'>
                 Review your past quiz performance
               </CardDescription>
             </div>
-            <Button onClick={() => router.push("/interview/mock")}>
+            <Button onClick={() => router.push("/interview/mock")} className='mt-2 md:mt-0'>
               Start New Quiz
             </Button>
           </div>

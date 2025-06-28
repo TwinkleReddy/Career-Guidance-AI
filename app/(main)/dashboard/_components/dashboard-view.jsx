@@ -144,45 +144,53 @@ const DashboardView = ({ insights }) => {
       </div>
 
       {/* Salary Ranges Chart */}
-      <Card className="col-span-4">
+      <Card className="col-span-6 md:col-span-12 sm:col-span-12">
         <CardHeader>
-          <CardTitle>Salary Ranges by Role</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-lg sm:text-base">
+            Salary Ranges by Role
+          </CardTitle>
+          <CardDescription className="text-sm sm:text-xs">
             Displaying minimum, median, and maximum salaries (in thousands)
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={salaryData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip
-                  content={({ active, payload, label }) => {
-                    if (active && payload && payload.length) {
-                      return (
-                        <div className="bg-background border rounded-lg p-2 shadow-md">
-                          <p className="font-medium">{label}</p>
-                          {payload.map((item, index) => (
-                            <p key={`${item.name}-${index}`} className="text-sm">
-                              {item.name}: ${item.value}K
-                            </p>
-                          ))}
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-                <Bar dataKey="min" fill="#94a3b8" name="Min Salary (K)" />
-                <Bar dataKey="median" fill="#64748b" name="Median Salary (K)" />
-                <Bar dataKey="max" fill="#475569" name="Max Salary (K)" />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="w-full overflow-auto">
+            <div className="min-w-[600px] h-[500px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={salaryData}
+                  margin={{ top: 20, right: 20, left: 0, bottom: 40 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" angle={-30} textAnchor="end" interval={0} height={60} className="text-[11px]"/>
+                  <YAxis />
+                  <Tooltip
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-background border rounded-md p-2 shadow-md text-2xs">
+                            <p className="font-medium">{label}</p>
+                            {payload.map((item, index) => (
+                              <p key={`${item.name}-${index}`}>
+                                {item.name}: ${item.value}K
+                              </p>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Bar dataKey="min" fill="#94a3b8" name="Min Salary (K)" />
+                  <Bar dataKey="median" fill="#64748b" name="Median Salary (K)" />
+                  <Bar dataKey="max" fill="#475569" name="Max Salary (K)" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </CardContent>
       </Card>
+
 
       {/* Industry Trends */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

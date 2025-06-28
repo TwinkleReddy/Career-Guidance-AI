@@ -152,7 +152,7 @@ export default function ResumeBuilder({ initialContent }) {
         <h1 className="font-bold gradient-title text-4xl md:text-6xl">
           Resume Builder
         </h1>
-        <div className="space-x-4">
+        <div className="space-x-4 md:mt-4">
           <Button
             variant="destructive"
             onClick={handleSubmit(onSubmit)}

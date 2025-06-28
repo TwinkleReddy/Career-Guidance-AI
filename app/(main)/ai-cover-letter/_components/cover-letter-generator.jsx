@@ -58,7 +58,7 @@ export default function CoverLetterGenerator() {
   };
 
   return (
-    <div className="space-y-6 px-6">
+    <div className="space-y-6 md:px-6">
       <Card>
         <CardHeader>
           <CardTitle>Job Details</CardTitle>
