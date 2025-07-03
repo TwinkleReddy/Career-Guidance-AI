@@ -5,6 +5,7 @@ import Header from "@/components/header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Toaster } from "sonner";
+import AnimatedBackground from "@/components/animated-background";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,9 +24,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider appearance={{
-      baseTheme: dark
-    }}>
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+      }}
+    >
       <html
         suppressHydrationWarning
         lang="en"
@@ -40,22 +43,8 @@ export default function RootLayout({ children }) {
             disableTransitionOnChange
           >
             {/* Animated Background */}
-            <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-              {/* Floating Orbs */}
-              <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse"></div>
-              <div className="absolute top-3/4 right-1/4 w-80 h-80 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-full blur-3xl animate-pulse delay-2000"></div>
-              
-              {/* Moving Particles */}
-              <div className="absolute top-10 left-10 w-2 h-2 bg-white/30 rounded-full animate-bounce delay-300"></div>
-              <div className="absolute top-32 right-20 w-3 h-3 bg-purple-400/40 rounded-full animate-bounce delay-700"></div>
-              <div className="absolute bottom-20 left-20 w-2 h-2 bg-blue-400/40 rounded-full animate-bounce delay-1100"></div>
-              <div className="absolute bottom-40 right-40 w-1 h-1 bg-pink-400/50 rounded-full animate-bounce delay-1500"></div>
-              
-              {/* Gradient Waves */}
-              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-purple-500/5 to-transparent animate-pulse"></div>
-              <div className="absolute inset-0 bg-gradient-to-tl from-transparent via-blue-500/5 to-transparent animate-pulse delay-1000"></div>
-            </div>
+            {/* Animated Background */}
+           <AnimatedBackground />
 
             {/* Content */}
             <div className="relative z-10">
@@ -68,7 +57,7 @@ export default function RootLayout({ children }) {
                 </div>
               </footer>
             </div>
-            
+
             <Toaster richColors />
           </ThemeProvider>
         </body>

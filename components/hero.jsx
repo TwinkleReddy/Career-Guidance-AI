@@ -1,11 +1,18 @@
 'use client'
 import Link from 'next/link'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button } from './ui/button'
 import Image from 'next/image'
 
 const HeroSection = () => {
     const imageRef = useRef(null)
+    const [loading, setLoading] = useState(false)
+
+    const handleClick = async () => {
+        setLoading(true)
+        await new Promise((r) => setTimeout(r, 2000)) // Simulate delay
+        setLoading(false)
+    }
 
     useEffect(() => {
         const imageElement = imageRef.current
@@ -41,13 +48,7 @@ const HeroSection = () => {
 
                 <div className='flex justify-center space-x-4'>
                     <Link href='/dashboard'>
-                        <Button size='lg' className='px-8'>
-                            Get Started
-                        </Button>
-                    </Link>
-
-                    <Link href='/dashboard'>
-                        <Button size='lg' className='px-8' variant='outline'>
+                        <Button size='lg' className='px-8' onClick={handleClick} loading={loading}>
                             Get Started
                         </Button>
                     </Link>
