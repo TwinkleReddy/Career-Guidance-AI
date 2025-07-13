@@ -6,6 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Toaster } from "sonner";
 import AnimatedBackground from "@/components/animated-background";
+import ChatBot from "@/components/chat-bot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,13 +45,15 @@ export default function RootLayout({ children }) {
           >
             {/* Animated Background */}
             {/* Animated Background */}
-           <AnimatedBackground />
+            <AnimatedBackground />
 
             {/* Content */}
             <div className="relative z-10">
               {/* header */}
               <Header />
-              <main className="min-h-screen">{children}</main>
+              <main className="min-h-screen">
+                {children} <ChatBot />
+              </main>
               <footer className="py-12 border border-b relative">
                 <div className="container px-4 mx-auto text-center text-black">
                   <p>2025 BumbleBee. All Rights Reserved</p>
