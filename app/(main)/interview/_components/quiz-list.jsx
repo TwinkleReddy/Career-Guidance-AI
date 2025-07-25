@@ -37,7 +37,7 @@ export default function QuizList({ assessments }) {
               </CardDescription>
             </div>
             <Button onClick={() => router.push("/interview/mock")} className='mt-2 md:mt-0'>
-              Start New Quiz
+              Start New Exam
             </Button>
           </div>
         </CardHeader>
