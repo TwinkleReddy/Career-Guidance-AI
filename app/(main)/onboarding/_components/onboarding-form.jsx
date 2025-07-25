@@ -72,7 +72,7 @@ const OnBoardingForm = ({ industries }) => {
                   <SelectValue placeholder="Select an Industry" />
                 </SelectTrigger>
                 <SelectContent>
-                  {industries.map((ind) => {
+                  {industries.map((ind, index) => {
                     return <SelectItem value={ind.id} key={ind.id}>{ind.name}</SelectItem>
                   })}
                 </SelectContent>

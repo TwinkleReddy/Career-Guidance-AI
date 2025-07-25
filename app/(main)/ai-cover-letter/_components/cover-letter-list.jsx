@@ -53,7 +53,7 @@ export default function CoverLetterList({ coverLetters }) {
 
     return (
         <div className="space-y-4">
-            {coverLetters.map((letter) => (
+            {coverLetters.map((letter,key) => (
                 <Card key={letter.id} className="group relative ">
                     <CardHeader>
                         <div className="flex items-start justify-between">

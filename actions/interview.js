@@ -83,7 +83,7 @@ export async function saveQuizResult(questions, answers, score) {
   if (wrongAnswers.length > 0) {
     const wrongQuestionsText = wrongAnswers
       .map(
-        (q) =>
+        (q, key) =>
           `Question: "${q.question}"\nCorrect Answer: "${q.answer}"\nUser Answer: "${q.userAnswer}"`
       )
       .join("\n\n");
@@ -154,3 +154,104 @@ export async function getAssessments() {
     throw new Error("Failed to fetch assessments");
   }
 }
+
+export async function evaluateCodeWithTestCases(code, language, testCases) {
+  const languageMap = {
+    javascript: 63,
+    python: 71,
+    java: 62,
+    cpp: 54,
+  };
+
+  const languageId = languageMap[language.toLowerCase()];
+  if (!languageId) throw new Error("Unsupported language");
+
+  const results = [];
+
+  for (const testCase of testCases) {
+    const submissionRes = await fetch(
+      "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=false",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
+          "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
+        },
+        body: JSON.stringify({
+          source_code: code,
+          language_id: languageId,
+          stdin: testCase.input,
+        }),
+      }
+    );
+
+    const { token } = await submissionRes.json();
+
+    // Polling
+    let result = null;
+    for (let i = 0; i < 10; i++) {
+      await new Promise((res) => setTimeout(res, 1500));
+      const res = await fetch(
+        `https://judge0-ce.p.rapidapi.com/submissions/${token}?base64_encoded=false`,
+        {
+          headers: {
+            "X-RapidAPI-Key": process.env.RAPIDAPI_KEY,
+            "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
+          },
+        }
+      );
+      result = await res.json();
+      if (result.status?.id > 2) break;
+    }
+
+    results.push({
+      input: testCase.input,
+      expected: testCase.expectedOutput,
+      actual: result.stdout?.trim() ?? "",
+      passed: result.stdout?.trim() === testCase.expectedOutput.trim(),
+      status: result.status?.description,
+      stderr: result.stderr,
+      compile_output: result.compile_output,
+    });
+  }
+
+  return results;
+}
+
+
+export async function generateCodingQuestion() {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  const user = await db.user.findUnique({
+    where: { clerkUserId: userId },
+    select: { skills: true, industry: true },
+  });
+
+  const prompt = `
+Generate 1 coding interview question for a ${user?.industry || "software"} engineer${
+    user?.skills?.length ? ` with skills in ${user.skills.join(", ")}` : ""
+  }.
+
+Return exactly this format:
+{
+  "title": "string",
+  "description": "string",
+  "difficulty": "Easy" | "Medium" | "Hard",
+  "sampleInput": "string",
+  "sampleOutput": "string",
+  "testCases": [
+    {
+      "input": "string",
+      "expectedOutput": "string"
+    }
+  ]
+}
+`;
+
+  const result = await model.generateContent(prompt);
+  const text = result.response.text().replace(/```json|```/g, "").trim();
+  return JSON.parse(text);
+}
+

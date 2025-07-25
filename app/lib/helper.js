@@ -5,7 +5,7 @@ export function entriesToMarkdown(entries, type) {
   return (
     `## ${type}\n\n` +
     entries
-      .map((entry) => {
+      .map((entry, index) => {
         const dateRange = entry.current
           ? `${entry.startDate} - Present`
           : `${entry.startDate} - ${entry.endDate}`;

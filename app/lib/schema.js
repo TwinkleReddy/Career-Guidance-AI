@@ -21,7 +21,7 @@ export const onboardingSchema = z.object({
     val
       ? val
           .split(",")
-          .map((skill) => skill.trim())
+          .map((skill, index) => skill.trim())
           .filter(Boolean)
       : undefined
   ),

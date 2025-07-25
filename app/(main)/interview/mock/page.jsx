@@ -2,8 +2,18 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Quiz from "../_components/quiz";
+import CodingQuestionCard from "../_components/coding-questions-card";
 
 export default function MockInterviewPage() {
+  const sampleQuestion = {
+    title: "FizzBuzz",
+    description:
+      "Write a program that prints the numbers from 1 to 100, but for multiples...",
+    difficulty: "Easy",
+    sampleInput: "",
+    sampleOutput: "1\n2\nFizz\n4\nBuzz\n…",
+    hint: "Use modulo (%) to test divisibility."
+  };
   return (
     <div className="container mx-auto space-y-4 py-6">
       <div className="flex flex-col space-y-2 mx-2">
@@ -21,8 +31,8 @@ export default function MockInterviewPage() {
           </p>
         </div>
       </div>
-
       <Quiz />
+      <CodingQuestionCard question={sampleQuestion} />
     </div>
   );
 }

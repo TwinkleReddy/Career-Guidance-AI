@@ -24,7 +24,7 @@ export default function PerformanceChart({ assessments }) {
 
     useEffect(() => {
         if (assessments) {
-            const formattedData = assessments.map((assessment) => ({
+            const formattedData = assessments.map((assessment, index) => ({
                 date: format(new Date(assessment.createdAt), "MMM dd"),
                 score: assessment.quizScore,
             }));

@@ -121,6 +121,11 @@
   }
 }
 
+html, body {
+  overflow: auto;
+}
+
+
 
 /* .grid-background{
   position: fixed;

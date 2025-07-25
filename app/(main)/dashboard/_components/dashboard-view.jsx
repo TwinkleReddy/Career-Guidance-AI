@@ -30,7 +30,7 @@ import { Progress } from "@/components/ui/progress";
 
 const DashboardView = ({ insights }) => {
   // Transform salary data for the chart
-  const salaryData = insights.salaryRanges.map((range) => ({
+  const salaryData = insights.salaryRanges.map((range, key) => ({
     name: range.role,
     min: range.min / 1000,
     max: range.max / 1000,
@@ -220,7 +220,7 @@ const DashboardView = ({ insights }) => {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {insights.recommendedSkills.map((skill) => (
+              {insights.recommendedSkills.map((skill, index) => (
                 <Badge key={skill} variant="outline">
                   {skill}
                 </Badge>
