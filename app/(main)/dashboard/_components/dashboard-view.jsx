@@ -27,6 +27,10 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const DashboardView = ({ insights }) => {
   // Transform salary data for the chart
@@ -36,6 +40,28 @@ const DashboardView = ({ insights }) => {
     max: range.max / 1000,
     median: range.median / 1000,
   }));
+
+  const [email, setEmail] = useState("");
+  const [sending, setSending] = useState(false);
+
+  const handleSendReport = async () => {
+    if (!email) return toast.error("Please enter an email");
+    setSending(true);
+    try {
+      const res = await fetch("/api/send-report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, insights }),
+      });
+      const data = await res.json();
+      if (res.ok) toast.success("Report sent successfully!");
+      else toast.error(data.error || "Failed to send report");
+    } catch (error) {
+      toast.error("An error occurred");
+    } finally {
+      setSending(false);
+    }
+  };
 
   const getDemandLevelColor = (level) => {
     switch (level.toLowerCase()) {
@@ -77,6 +103,18 @@ const DashboardView = ({ insights }) => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <Badge variant="outline">Last updated: {lastUpdatedDate}</Badge>
+      </div>
+
+      <div className="flex gap-2 items-end">
+        <Input
+          placeholder="Enter email to send report"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="max-w-sm"
+        />
+        <Button onClick={handleSendReport} disabled={sending}>
+          {sending ? "Sending..." : "Send Report"}
+        </Button>
       </div>
 
       {/* Market Overview Cards */}
@@ -162,7 +200,7 @@ const DashboardView = ({ insights }) => {
                   margin={{ top: 20, right: 20, left: 0, bottom: 40 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" angle={-30} textAnchor="end" interval={0} height={60} className="text-[11px]"/>
+                  <XAxis dataKey="name" angle={-30} textAnchor="end" interval={0} height={60} className="text-[11px]" />
                   <YAxis />
                   <Tooltip
                     content={({ active, payload, label }) => {

@@ -38,7 +38,7 @@ const HeroSection = () => {
             <div className='space-y-6 text-center'>
                 <div className='space-y-6 mx-auto'>
                     <h1 className='text-5xl font-bold md:text-6xl lg:text-7xl xl:text-8xl gradient-title'>
-                        Success Start Here with
+                        Success Starts Here with
                         <br />
                         Your AI Companion
                     </h1>
