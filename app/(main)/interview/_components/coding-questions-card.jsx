@@ -16,29 +16,30 @@ export default function CodingQuestionCard() {
     setCode,
     setLanguage,
     fetchQuestion,
+    newFetchQuestion,
     submitCode,
   } = useCodingQuestion();
 
   return (
     <div className="space-y-6">
-        {
-            !question && <Card className="mx-2">
-        <CardHeader>
-          <CardTitle>Want to solve some coding questions?</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">
-            This quiz contains 1 coding question specific to your industry and
-            skills. Take your time to think and complete the question.
-          </p>
-        </CardContent>
-        <CardFooter>
-          <Button onClick={fetchQuestion} className="w-full">
-            {loading ? "Loading..." : "Get Coding Question"}
-          </Button>
-        </CardFooter>
-      </Card>
-        }
+      {
+        !question && <Card className="mx-2">
+          <CardHeader>
+            <CardTitle>Want to solve some coding questions?</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
+              This quiz contains 1 coding question specific to your industry and
+              skills. Take your time to think and complete the question.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Button onClick={fetchQuestion} className="w-full">
+              {loading ? "Loading..." : "Get Coding Question"}
+            </Button>
+          </CardFooter>
+        </Card>
+      }
 
       {question && (
         <div className="bg-muted p-4 rounded space-y-2">
@@ -75,10 +76,18 @@ export default function CodingQuestionCard() {
             onChange={(v) => setCode(v || "")}
             theme="vs-dark"
           />
+          <div className="flex justify-between">
+            <Button onClick={submitCode} disabled={submitting}>
+              {submitting ? "Running..." : "Submit Code"}
+            </Button>
 
-          <Button onClick={submitCode} disabled={submitting}>
-            {submitting ? "Running..." : "Submit Code"}
-          </Button>
+            {results.length > 0 && results.every(r => r.passed) && (
+              <Button onClick={newFetchQuestion}>
+                Next Question
+              </Button>
+            )}
+          </div>
+
 
           {results.length > 0 && (
             <div className="mt-4 space-y-2">
@@ -86,9 +95,8 @@ export default function CodingQuestionCard() {
               {results.map((r, i) => (
                 <div
                   key={i}
-                  className={`p-2 rounded ${
-                    r.passed ? "bg-green-100" : "bg-red-100"
-                  }`}
+                  className={`p-2 rounded ${r.passed ? "bg-green-100" : "bg-red-100"
+                    }`}
                 >
                   <p>
                     <strong>Input:</strong> {r.input}

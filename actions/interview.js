@@ -255,3 +255,38 @@ Return exactly this format:
   return JSON.parse(text);
 }
 
+export async function generateNewCodingQuestion() {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  const user = await db.user.findUnique({
+    where: { clerkUserId: userId },
+    select: { skills: true, industry: true },
+  });
+
+  const prompt = `
+Generate a new coding interview question for a ${user?.industry || "software"} engineer${
+    user?.skills?.length ? ` with skills in ${user.skills.join(", ")}` : ""
+  }.
+
+Return exactly this format:
+{
+  "title": "string",
+  "description": "string",
+  "difficulty": "Easy" | "Medium" | "Hard",
+  "sampleInput": "string",
+  "sampleOutput": "string",
+  "testCases": [
+    {
+      "input": "string",
+      "expectedOutput": "string"
+    }
+  ]
+}
+`;
+
+  const result = await model.generateContent(prompt);
+  const text = result.response.text().replace(/```json|```/g, "").trim();
+  return JSON.parse(text);
+}
+

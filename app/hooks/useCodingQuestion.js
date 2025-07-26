@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { evaluateCodeWithTestCases, generateCodingQuestion } from "@/actions/interview";
+import { evaluateCodeWithTestCases, generateCodingQuestion, generateNewCodingQuestion } from "@/actions/interview";
 
 export function useCodingQuestion() {
   const [question, setQuestion] = useState(null);
@@ -14,6 +14,19 @@ export function useCodingQuestion() {
     setLoading(true);
     try {
       const q = await generateCodingQuestion();
+      setQuestion(q);
+      setResults([]);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+    const newFetchQuestion = async () => {
+    setLoading(true);
+    try {
+      const q = await generateNewCodingQuestion();
       setQuestion(q);
       setResults([]);
     } catch (err) {
@@ -47,6 +60,7 @@ export function useCodingQuestion() {
     setCode,
     setLanguage,
     fetchQuestion,
+    newFetchQuestion,
     submitCode,
   };
 }
