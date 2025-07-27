@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 
 export default function ChatBot() {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
     const [messages, setMessages] = useState([
         { text: 'Hi! How can we help you?', sender: 'bot' },
     ]);
@@ -27,7 +27,6 @@ export default function ChatBot() {
         setMessages((prev) => [...prev, userMessage]);
         setInput('');
 
-        // Simulated AI reply (replace with your API later)
         try {
             const response = await fetch('/api/chat', {
                 method: 'POST',
@@ -35,12 +34,54 @@ export default function ChatBot() {
                 body: JSON.stringify({ message: input }),
             });
             const data = await response.json();
-            const aiReply = { text: data.reply, sender: 'bot' };
-            setMessages((prev) => [...prev, aiReply]);
+
+            if (data.type === 'slots') {
+                setMessages((prev) => [
+                    ...prev,
+                    { text: data.reply, sender: 'bot', type: 'slots', slots: data.slots },
+                ]);
+            } else {
+                setMessages((prev) => [...prev, { text: data.reply, sender: 'bot' }]);
+            }
         } catch {
-            setMessages((prev) => [...prev, { text: 'Error reaching AI.', sender: 'bot' }]);
+            setMessages((prev) => [
+                ...prev,
+                { text: 'Error reaching AI.', sender: 'bot' },
+            ]);
         }
     };
+
+    const handleSlotBooking = async (slot) => {
+        const userMsg = { text: `I'd like to book ${slot}`, sender: 'user' };
+        setMessages((prev) => [...prev, userMsg]);
+
+        // Step 1: Ask user for email
+        const email = prompt("Please enter your email to confirm the booking:");
+        if (!email) {
+            setMessages((prev) => [
+                ...prev,
+                { text: "Email is required to confirm the booking.", sender: 'bot' },
+            ]);
+            return;
+        }
+
+        // Step 2: Send booking request with slot + email
+        try {
+            const response = await fetch('/api/book-slot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ slot, email }),
+            });
+            const data = await response.json();
+            setMessages((prev) => [...prev, { text: data.confirmation, sender: 'bot' }]);
+        } catch {
+            setMessages((prev) => [
+                ...prev,
+                { text: 'Failed to book the slot. Please try again.', sender: 'bot' },
+            ]);
+        }
+    };
+
 
     return (
         <div>
@@ -77,18 +118,37 @@ export default function ChatBot() {
                         </div>
 
                         {/* Messages */}
-                        {/* Messages */}
                         <ScrollArea className="flex-1 max-h-96 p-4 overflow-y-auto">
                             <div ref={chatRef} className="flex flex-col space-y-2">
                                 {messages.map((msg, idx) => (
-                                    <div
-                                        key={idx}
-                                        className={`${msg.sender === 'user'
-                                                ? 'bg-gray-200 text-gray-800 self-end'
-                                                : 'bg-blue-100 text-blue-800 self-start'
-                                            } px-3 py-2 rounded-lg text-sm max-w-[70%]`}
-                                    >
-                                        {msg.text}
+                                    <div key={idx} className="flex flex-col">
+                                        {msg.type === 'slots' ? (
+                                            <>
+                                                <div className="bg-blue-100 text-blue-800 self-start px-3 py-2 rounded-lg text-sm max-w-[70%] mb-2">
+                                                    {msg.text}
+                                                </div>
+                                                <div className="flex flex-wrap gap-2 self-start">
+                                                    {msg.slots.map((slot, i) => (
+                                                        <button
+                                                            key={i}
+                                                            onClick={() => handleSlotBooking(slot)}
+                                                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-xs"
+                                                        >
+                                                            {slot}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <div
+                                                className={`px-3 py-2 rounded-lg text-sm max-w-[70%] ${msg.sender === 'user'
+                                                    ? 'bg-gray-200 text-gray-800 self-end'
+                                                    : 'bg-blue-100 text-blue-800 self-start'
+                                                    }`}
+                                            >
+                                                {msg.text}
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -96,7 +156,6 @@ export default function ChatBot() {
                         </ScrollArea>
 
                         {/* Input */}
-
                         <div className="border-t p-2 bg-gray-50 flex items-center gap-2">
                             <input
                                 type="text"
@@ -118,7 +177,6 @@ export default function ChatBot() {
                     </motion.div>
                 )}
             </AnimatePresence>
-
-        </div >
+        </div>
     );
 }

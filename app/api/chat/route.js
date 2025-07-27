@@ -18,6 +18,29 @@ export async function POST(request) {
   try {
     const { message } = await request.json();
 
+    // Simple keyword-based intent check (you can later replace this with AI intent detection)
+    const lowerMsg = message.toLowerCase();
+    const isSchedulingRequest =
+      lowerMsg.includes("schedule") ||
+      lowerMsg.includes("book a meeting") ||
+      lowerMsg.includes("set up a call") ||
+      lowerMsg.includes("meeting");
+
+    if (isSchedulingRequest) {
+      // You can generate these dynamically too
+      const slots = ["10:00 AM", "1:30 PM", "4:00 PM"];
+
+      return new Response(JSON.stringify({
+        reply: "Sure! Here are some available time slots. Please select one:",
+        type: "slots",
+        slots,
+      }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Otherwise, use Gemini to respond
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -43,7 +66,6 @@ User's Question: "${message}"
     });
   } catch (error) {
     console.error("Chat API Error:", error);
-    // Fallback polite reply to keep chat UX smooth
     return new Response(JSON.stringify({
       reply:
         "Our AI assistant is currently busy. Please try again later or contact us directly at kruthikmanubolu@gmail.com.",

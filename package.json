@@ -39,6 +39,7 @@
     "date-fns": "^4.1.0",
     "easymde": "^2.20.0",
     "framer-motion": "^12.23.3",
+    "googleapis": "^154.0.0",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.3",
     "inngest": "^3.39.1",

@@ -88,3 +88,10 @@ model IndustryInsight {
 
   @@index([industry])
 }
+
+
+model Booking {
+  id        String   @id @default(cuid())
+  slot      String
+  createdAt DateTime @default(now())
+}
