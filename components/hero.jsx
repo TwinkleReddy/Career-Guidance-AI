@@ -56,7 +56,7 @@ const HeroSection = () => {
 
                 <div className='hero-image-wrapper mt-5 mx-2'>
                     <div ref={imageRef} className='hero-image'>
-                        <Image src={'/banner_gpt.png'} width={1280} height={720} alt='banner bumblebee' className='rounded-lg shadow-2xl border mx-auto' priority />
+                        <Image src={'/banner_gpt.png'} width={1280} height={720} alt='banner bumblebee' className='rounded-lg shadow-2xl border mx-auto w-[400px] md:w-[700px] lg:w-[1000px] xl:w-[1280px]' priority />
                     </div>
                 </div>
             </div>

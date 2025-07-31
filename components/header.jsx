@@ -14,8 +14,15 @@ const Header = () => {
             {/* ... floating orbs and gradients ... */}
             <nav className='container mx-auto px-4 h-16 flex items-center justify-between'>
                 <Link href='/'>
-                    <Image src='/logo (3).png' width={220} height={50} alt='bumblebee logo' className='object-contain' />
+                    <Image
+                        src='/logo (5).jpg'
+                        alt='bumblebee logo'
+                        width={220}
+                        height={50}
+                        className='object-contain w-32 sm:w-40 md:w-48 lg:w-56 xl:w-64 h-auto'
+                    />
                 </Link>
+
                 <div className='flex items-center space-x-2 md:space-x-4'>
                     <SignedIn>
                         <Link href='/dashboard'>
@@ -61,7 +68,7 @@ const Header = () => {
                         </SignInButton>
                     </SignedOut>
                     <SignedIn>
-                        <UserButton 
+                        <UserButton
                             appearance={{
                                 elements: {
                                     avatarBox: "w-10 h-10",
