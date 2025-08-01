@@ -3,10 +3,13 @@
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { generateAIInsights } from "./dashboard";
+import { checkUser } from "@/lib/checkUser";
 
 export async function updateUser(data) {
   const { userId } = await auth();
   if (!userId) throw new Error("UnAuthorized");
+
+  await checkUser()
 
   const user = await db.user.findUnique({
     where: {
@@ -67,6 +70,8 @@ export async function getUserOnBoardingStatus() {
 
   if (!userId) throw new Error("UnAuthorized");
 
+  await checkUser()
+
   try {
     const user = await db.user.findUnique({
       where: {
@@ -90,6 +95,8 @@ export async function getUser() {
   const { userId } = await auth();
   if (!userId) throw new Error("UnAuthorized");
 
+  await checkUser()
+
   try {
     const user = await db.user.findUnique({
       where: { clerkUserId: userId },
@@ -110,6 +117,7 @@ export async function getUser() {
 
 export const getUserProfile = async () => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+  await checkUser()
 
   const res = await fetch(`${baseUrl}/api/user/profile`, {
     method: 'GET',
