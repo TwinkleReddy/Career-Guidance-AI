@@ -123,6 +123,7 @@
 
 html, body {
   overflow: auto;
+  overflow-x: hidden;
 }
 
 
