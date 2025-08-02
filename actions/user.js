@@ -9,7 +9,7 @@ export async function updateUser(data) {
   const { userId } = await auth();
   if (!userId) throw new Error("UnAuthorized");
 
-  await checkUser()
+  await checkUser();
 
   const user = await db.user.findUnique({
     where: {
@@ -24,22 +24,19 @@ export async function updateUser(data) {
       async (tx) => {
         let industryInsight = await tx.industryInsight.findUnique({
           where: {
-            industry: data.industry, // Ensure you're passing the correct 'industry' here
+            industry: data.industry,
           },
         });
 
         if (!industryInsight) {
-
           const insights = await generateAIInsights(data.industry);
-          
-              industryInsight = await db.industryInsight.create({
-                data: {
-                  industry: data.industry,
-                  ...insights,
-                  nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-                },
-              });
-          
+          industryInsight = await tx.industryInsight.create({
+            data: {
+              industry: data.industry,
+              ...insights,
+              nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            },
+          });
         }
 
         const updatedUser = await tx.user.update({
@@ -47,7 +44,14 @@ export async function updateUser(data) {
             id: user.id,
           },
           data: {
-            industry: data.industry, // Assuming you're also updating the user's industry
+            industryInsight: {
+              connect: {
+                industry: data.industry,
+              },
+            },
+            experience: Number(data.experience),
+            bio: data.bio,
+            skills: data.skills,
           },
         });
 
@@ -65,12 +69,12 @@ export async function updateUser(data) {
   }
 }
 
-export async function getUserOnBoardingStatus() {
-  const { userId } = await auth(); // ✅ You need this line to get userId
 
+export async function getUserOnBoardingStatus() {
+  const { userId } = await auth();
   if (!userId) throw new Error("UnAuthorized");
 
-  await checkUser()
+  await checkUser();
 
   try {
     const user = await db.user.findUnique({
@@ -95,13 +99,14 @@ export async function getUser() {
   const { userId } = await auth();
   if (!userId) throw new Error("UnAuthorized");
 
-  await checkUser()
+  await checkUser();
 
   try {
     const user = await db.user.findUnique({
       where: { clerkUserId: userId },
       select: {
         industry: true,
+        subIndustry: true,
         experience: true,
         skills: true,
         bio: true,
@@ -115,21 +120,13 @@ export async function getUser() {
   }
 }
 
+
 export const getUserProfile = async () => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
-  await checkUser()
+  const { userId: clerkUserId } = await auth();
 
-  const res = await fetch(`${baseUrl}/api/user/profile`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-store',
-  })
+  if (!clerkUserId) return null;
 
-  if (!res.ok) throw new Error('Failed to fetch profile')
-  return res.json()
-}
-
-
-
+  return await db.user.findUnique({
+    where: { clerkUserId },
+  });
+};

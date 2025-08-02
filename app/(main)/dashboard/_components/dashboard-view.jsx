@@ -31,8 +31,10 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const DashboardView = ({ insights }) => {
+  const router = useRouter()
   // Transform salary data for the chart
   const salaryData = insights.salaryRanges.map((range, key) => ({
     name: range.role,
@@ -112,10 +114,17 @@ const DashboardView = ({ insights }) => {
           onChange={(e) => setEmail(e.target.value)}
           className="max-w-sm"
         />
-        <Button onClick={handleSendReport} disabled={sending}>
+        <Button className='cursor-pointer' onClick={handleSendReport} disabled={sending}>
           {sending ? "Sending..." : "Send Report"}
         </Button>
+        <div className="ml-auto">
+          <Button className='cursor-pointer' onClick={() => router.push('/onboarding')}>
+            Edit Profile
+          </Button>
+        </div>
       </div>
+
+
 
       {/* Market Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

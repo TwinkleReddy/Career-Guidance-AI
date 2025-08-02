@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 
 export default function ChatBot() {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
         { text: 'Hi! How can we help you?', sender: 'bot' },
     ]);

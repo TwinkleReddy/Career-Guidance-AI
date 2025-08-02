@@ -1,11 +1,17 @@
 'use client'
+
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { onboardingSchema } from '@/app/lib/schema'
 import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardAction, CardTitle, CardDescription } from '@/components/ui/card'
-import { Select, SelectValue, SelectContent, SelectItem, SelectTrigger, SelectGroup, SelectLabel } from '@/components/ui/select'
+import {
+  Card, CardContent, CardHeader, CardTitle, CardDescription
+} from '@/components/ui/card'
+import {
+  Select, SelectValue, SelectContent, SelectItem,
+  SelectTrigger, SelectGroup, SelectLabel
+} from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -13,40 +19,40 @@ import { Button } from '@/components/ui/button'
 import useFetch from '@/hooks/use-fetch'
 import { updateUser } from '@/actions/user'
 import { toast } from 'sonner'
-import { Controller } from 'react-hook-form'
 import { Loader2 } from 'lucide-react'
-const OnBoardingForm = ({ industries }) => {
 
-  const [selectedIndustry, setSelectedIndustry] = useState(null);
+const OnBoardingForm = ({ industries, defaultValues }) => {
+  const [selectedIndustry, setSelectedIndustry] = useState(null)
+  const router = useRouter()
+  const { loading: updateLoading, fn: updateFunction, data: updateResult } = useFetch(updateUser)
 
-  const router = useRouter();
-
-  const {loading: updateLoading, fn: updateFunction, data: updateResult} = useFetch(updateUser)
-
-  const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm({
-    resolver: zodResolver(onboardingSchema)
+  const { register, handleSubmit, formState: { errors }, setValue, watch, reset } = useForm({
+    resolver: zodResolver(onboardingSchema),
+    defaultValues
   })
 
   const watchIndustry = watch('industry')
 
   const onSubmit = async (values) => {
-
     try {
-      const formattedIndustry = `${values.industry} - ${values.subIndustry.toLowerCase().replace(/ /g, "-")}`;
-
-      await updateFunction({
-        ...values,
-        industry: formattedIndustry,
-      })
-      console.log(values)
+      const formattedIndustry = `${values.industry} - ${values.subIndustry.toLowerCase().replace(/ /g, '-')}`
+      await updateFunction({ ...values, industry: formattedIndustry })
     } catch (error) {
-      console.log('Onboarding Error:', error);
+      console.log('Onboarding Error:', error)
     }
   }
 
   useEffect(() => {
-    if(updateResult?.success && !updateLoading) {
-      toast.success("Profile Completed Successfully")
+    if (defaultValues) {
+      reset(defaultValues)
+      const selected = industries.find(ind => ind.id === defaultValues.industry)
+      setSelectedIndustry(selected || null)
+    }
+  }, [defaultValues, industries, reset])
+
+  useEffect(() => {
+    if (updateResult?.success && !updateLoading) {
+      toast.success('Profile Completed Successfully')
       router.push('/dashboard')
       router.refresh()
     }
@@ -61,39 +67,41 @@ const OnBoardingForm = ({ industries }) => {
         </CardHeader>
         <CardContent>
           <form className='space-y-6' onSubmit={handleSubmit(onSubmit)}>
+            {/* Industry */}
             <div className='space-y-2'>
               <Label htmlFor='industry'>Industry</Label>
               <Select onValueChange={(value) => {
-                setValue('industry', value);
-                setSelectedIndustry(industries.find((ind) => ind.id === value));
-                setValue("subIndustry", "");
-              }}>
+                setValue('industry', value)
+                setSelectedIndustry(industries.find(ind => ind.id === value))
+                setValue('subIndustry', '')
+              }} value={watchIndustry}>
                 <SelectTrigger id='industry'>
                   <SelectValue placeholder="Select an Industry" />
                 </SelectTrigger>
                 <SelectContent>
-                  {industries.map((ind, index) => {
-                    return <SelectItem value={ind.id} key={ind.id}>{ind.name}</SelectItem>
-                  })}
+                  {industries.map((ind) => (
+                    <SelectItem value={ind.id} key={ind.id}>{ind.name}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
-              {errors.industry && (
-                <p className='text-sm text-red-500'>{errors.industry.message}</p>
-              )}
+              {errors.industry && <p className='text-sm text-red-500'>{errors.industry.message}</p>}
             </div>
-            {watchIndustry && (
-              <div className="space-y-2">
-                <Label htmlFor="subIndustry">Specialization</Label>
+
+            {/* SubIndustry */}
+            {watchIndustry && selectedIndustry && (
+              <div className='space-y-2'>
+                <Label htmlFor='subIndustry'>Specialization</Label>
                 <Select
-                  onValueChange={(value) => setValue("subIndustry", value)}
+                  onValueChange={(value) => setValue('subIndustry', value)}
+                  value={watch('subIndustry')}
                 >
-                  <SelectTrigger id="subIndustry">
+                  <SelectTrigger id='subIndustry'>
                     <SelectValue placeholder="Select your specialization" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Specializations</SelectLabel>
-                      {selectedIndustry?.subIndustries.map((sub) => (
+                      {selectedIndustry.subIndustries.map((sub) => (
                         <SelectItem key={sub} value={sub}>
                           {sub}
                         </SelectItem>
@@ -101,47 +109,46 @@ const OnBoardingForm = ({ industries }) => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-                {errors.subIndustry && (
-                  <p className="text-sm text-red-500">
-                    {errors.subIndustry.message}
-                  </p>
-                )}
+                {errors.subIndustry && <p className='text-sm text-red-500'>{errors.subIndustry.message}</p>}
               </div>
             )}
 
+            {/* Experience */}
             <div className='space-y-2'>
               <Label htmlFor='experience'>Years of Experience</Label>
-              <Input id='experience' type='number' min='0' max='50' placeholder='Enter years of Experience' {...register('experience')}></Input>
-              {errors.experience && (
-                <p className='text-sm text-red-500'>{errors.experience.message}</p>
-              )}
+              <Input
+                id='experience'
+                type='number'
+                min='0'
+                max='50'
+                placeholder='Enter years of Experience'
+                {...register('experience')}
+              />
+              {errors.experience && <p className='text-sm text-red-500'>{errors.experience.message}</p>}
             </div>
 
+            {/* Skills */}
             <div className='space-y-2'>
               <Label htmlFor='skills'>Skills</Label>
-              <Input id='skills' placeholder='e.g., Python, JavaScript Project Management' {...register('skills')} />
-
+              <Input id='skills' placeholder='e.g., Python, JavaScript, Project Management' {...register('skills')} />
               <p className='text-sm text-muted-foreground'>Separate multiple skills with commas</p>
-              {errors.skills && (
-                <p className='text-sm text-red-500'>{errors.skills.message}</p>
-              )}
+              {errors.skills && <p className='text-sm text-red-500'>{errors.skills.message}</p>}
             </div>
 
+            {/* Bio */}
             <div className='space-y-2'>
               <Label htmlFor='bio'>Bio</Label>
               <Textarea id='bio' placeholder='Tell us about your professional background' className='h-32' {...register('bio')} />
-              {errors.bio && (
-                <p className='text-sm text-red-500'>{errors.bio.message}</p>
-              )}
+              {errors.bio && <p className='text-sm text-red-500'>{errors.bio.message}</p>}
             </div>
 
             <Button type='submit' className='w-full' disabled={updateLoading}>
               {updateLoading ? (
                 <>
-                <Loader2 className='mr-2 h-4 w-4 animate-spin'/>
-                Saving...
+                  <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                  Saving...
                 </>
-              ): ("Complete Profile")}
+              ) : "Complete Profile"}
             </Button>
           </form>
         </CardContent>
@@ -151,5 +158,3 @@ const OnBoardingForm = ({ industries }) => {
 }
 
 export default OnBoardingForm
-
-
