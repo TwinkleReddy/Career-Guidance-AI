@@ -50,7 +50,7 @@ export default function RootLayout({ children }) {
             {/* Content */}
             <div className="relative z-10">
               {/* header */}
-              <Header />
+              <Header className='!sticky' />
               <main className="min-h-screen">
                 {children} <ChatBot />
               </main>
