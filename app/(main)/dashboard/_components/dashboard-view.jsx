@@ -119,7 +119,7 @@ const DashboardView = ({ insights }) => {
         </Button>
         <div className="ml-auto">
           <Button className='cursor-pointer' onClick={() => router.push('/onboarding')}>
-            Edit Profile
+            Edit Profile 
           </Button>
         </div>
       </div>
