@@ -112,7 +112,7 @@ const DashboardView = ({ insights }) => {
           placeholder="Enter email to send report"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="max-w-sm"
+          className="max-w-sm border border-black"
         />
         <Button className='cursor-pointer' onClick={handleSendReport} disabled={sending}>
           {sending ? "Sending..." : "Send Report"}
@@ -202,7 +202,7 @@ const DashboardView = ({ insights }) => {
         </CardHeader>
         <CardContent>
           <div className="w-full overflow-auto">
-            <div className="min-w-[600px] h-[500px]">
+            <div className="min-w-[600px] h-[350px] md:h-[500px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={salaryData}
