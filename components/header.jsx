@@ -15,11 +15,11 @@ const Header = () => {
             <nav className='container mx-auto px-4 h-16 flex items-center justify-between'>
                 <Link href='/'>
                     <Image
-                        src='/logo (5).jpg'
+                        src='/logo (3).png'
                         alt='bumblebee logo'
                         width={220}
                         height={50}
-                        className='object-contain w-32 sm:w-40 md:w-48 lg:w-56 xl:w-64 h-auto'
+                        className='object-contain w-40 md:w-48 lg:w-56 xl:w-64 h-auto mt-2'
                     />
                 </Link>
 
