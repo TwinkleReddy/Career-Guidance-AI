@@ -48,14 +48,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="py-10 mx-auto">
-        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <h2 className="text-4xl font-bond text-center mb-4">
-            Career progression Map
-          </h2>
-          <CareerPathVisualizer />
-        </div>
-      </section>
+      
 
       {/* Stats Section */}
       <section className="w-full py-20 bg-background/30">

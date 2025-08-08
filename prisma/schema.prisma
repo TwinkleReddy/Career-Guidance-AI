@@ -81,6 +81,7 @@ model IndustryInsight {
   marketOutlook String
   keyTrends     String[]
   topCompanies   Json[]
+  careerProgression Json[]
 
 
   recommendedSkills String[]

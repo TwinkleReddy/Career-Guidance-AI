@@ -32,6 +32,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import CareerPathVisualizer from "@/components/career-path-visualizer";
 
 const DashboardView = ({ insights }) => {
   const router = useRouter()
@@ -237,6 +238,12 @@ const DashboardView = ({ insights }) => {
           </div>
         </CardContent>
       </Card>
+
+      <section className="py-10 mx-auto">
+        <div className="container">
+          <CareerPathVisualizer />
+        </div>
+      </section>
 
       {/* Top Companies Paying the Highest Salaries */}
       <Card className="col-span-6 md:col-span-12 sm:col-span-12">

@@ -11,6 +11,7 @@ export async function updateUser(data) {
 
   await checkUser();
 
+  // Find user first
   const user = await db.user.findUnique({
     where: {
       clerkUserId: userId,
@@ -19,48 +20,51 @@ export async function updateUser(data) {
 
   if (!user) throw new Error("User not found");
 
+  // Check if industryInsight already exists outside transaction
+  let industryInsight = await db.industryInsight.findUnique({
+    where: {
+      industry: data.industry,
+    },
+  });
+
+  // If not exists, generate insights outside the transaction
+  let insights = null;
+  if (!industryInsight) {
+    insights = await generateAIInsights(data.industry);
+  }
+
   try {
-    const result = await db.$transaction(
-      async (tx) => {
-        let industryInsight = await tx.industryInsight.findUnique({
-          where: {
-            industry: data.industry,
-          },
-        });
-
-        if (!industryInsight) {
-          const insights = await generateAIInsights(data.industry);
-          industryInsight = await tx.industryInsight.create({
-            data: {
-              industry: data.industry,
-              ...insights,
-              nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            },
-          });
-        }
-
-        const updatedUser = await tx.user.update({
-          where: {
-            id: user.id,
-          },
+    const result = await db.$transaction(async (tx) => {
+      // Create industryInsight if not exists
+      if (!industryInsight) {
+        industryInsight = await tx.industryInsight.create({
           data: {
-            industryInsight: {
-              connect: {
-                industry: data.industry,
-              },
-            },
-            experience: Number(data.experience),
-            bio: data.bio,
-            skills: data.skills,
+            industry: data.industry,
+            ...insights,
+            nextUpdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           },
         });
-
-        return { industryInsight, updatedUser };
-      },
-      {
-        timeout: 10000,
       }
-    );
+
+      // Update user
+      const updatedUser = await tx.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          industryInsight: {
+            connect: {
+              industry: data.industry,
+            },
+          },
+          experience: Number(data.experience),
+          bio: data.bio,
+          skills: data.skills,
+        },
+      });
+
+      return { industryInsight, updatedUser };
+    });
 
     return { success: true, ...result };
   } catch (error) {

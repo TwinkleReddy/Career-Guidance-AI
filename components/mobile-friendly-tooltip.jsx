@@ -28,7 +28,7 @@ export function MobileFriendlyTooltip({ children, content }) {
       <TooltipTrigger asChild onClick={handleClick}>
         {children}
       </TooltipTrigger>
-      <TooltipContent className="max-w-xs text-sm">{content}</TooltipContent>
+      <TooltipContent className="text-sm">{content}</TooltipContent>
     </Tooltip>
   );
 }
