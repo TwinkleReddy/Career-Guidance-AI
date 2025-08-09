@@ -24,7 +24,7 @@ export default function Home() {
       <HeroSection />
 
       {/* Features Section */}
-      <section className="w-full py-20 gradient-background">
+      <section className="w-full py-10 gradient-background">
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-4xl font-bond text-center mb-16">
             Powerful Features for Your Career Growth
