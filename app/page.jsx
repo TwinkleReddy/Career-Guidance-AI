@@ -155,7 +155,7 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section className="w-full py-20 gradient-background">
+      <section className="w-full py-20 gradient-background ml-2 mr-2">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-4xl font-bond mb-4">
@@ -185,7 +185,7 @@ export default function Home() {
             <h2 className="text-4xl font-bond tracking-tight text-black sm:text-5xl">
               Ready to Accelerate Your Career?
             </h2>
-            <p className="mx-auto max-w-[600px] text-black md:text-xl">
+            <p className="mx-auto max-w-[600px] text-black md:text-xl px-2">
               Join thousands of professionals who are advancing their careers
               with AI-powered guidance.
             </p>
