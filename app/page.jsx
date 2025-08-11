@@ -16,6 +16,7 @@ import {
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import CareerPathVisualizer from "@/components/career-path-visualizer";
+import { templates } from "@/data/templates";
 
 export default function Home() {
   return (
@@ -27,7 +28,7 @@ export default function Home() {
       <section className="w-full py-10 gradient-background">
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-4xl font-bond text-center mb-16">
-            Powerful Features for Your Career Growth
+            Powerful Features for your Career Growth
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {features.map((feature, index) => (
@@ -48,7 +49,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
+
 
       {/* Stats Section */}
       <section className="w-full py-20 bg-background/30">
@@ -153,6 +154,61 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Templates Section */}
+      {/* Templates Section */}
+      <section className="w-full py-20 bg-background/30">
+        <div className="container mx-auto px-4 md:px-6">
+          <h2 className="text-4xl font-bond text-center mb-6">
+            Resume & Cover Letter Templates
+          </h2>
+          <p className="text-muted-foreground text-center mb-16 max-w-2xl mx-auto">
+            Compare before and after AI-enhanced career documents and see the difference.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {templates.map((template, index) => (
+              <Card
+                key={index}
+                className="shadow-lg hover:shadow-xl transition-shadow duration-300"
+              >
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-bold mb-4">{template.type}</h3>
+                  <p className="text-muted-foreground mb-6">{template.description}</p>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    {["before", "after"].map((stage) => {
+                      const file = template[stage];
+                      return (
+                        <div className="text-center" key={stage}>
+                          <p className="font-semibold mb-2">
+                            {stage.charAt(0).toUpperCase() + stage.slice(1)}
+                          </p>
+                          {file.type === "image" ? (
+                            <Image
+                              src={file.src}
+                              alt={`${template.type} ${stage}`}
+                              width={300}
+                              height={1200}
+                              className="rounded-lg border"
+                            />
+                          ) : (
+                            <iframe
+                              src={file.src}
+                              className="rounded-lg border w-full h-[400px]"
+                            />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
 
       {/* FAQ Section */}
       <section className="w-full py-20 gradient-background ml-2 mr-2">

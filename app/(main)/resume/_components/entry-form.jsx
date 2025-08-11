@@ -16,7 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { entrySchema } from "@/app/lib/schema";
-import { Sparkles, PlusCircle, X, Pencil, Save, Loader2 } from "lucide-react";
+import { Sparkles, PlusCircle, X, Pencil, Loader2 } from "lucide-react";
 import { improveWithAI } from "@/actions/resume";
 import { toast } from "sonner";
 import useFetch from "@/hooks/use-fetch";
@@ -29,6 +29,7 @@ const formatDisplayDate = (dateString) => {
 
 export function EntryForm({ type, entries, onChange }) {
   const [isAdding, setIsAdding] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
 
   const {
     register,
@@ -51,22 +52,34 @@ export function EntryForm({ type, entries, onChange }) {
 
   const current = watch("current");
 
-  const handleAdd = handleValidation((data) => {
+  const handleSave = handleValidation((data) => {
     const formattedEntry = {
       ...data,
       startDate: formatDisplayDate(data.startDate),
       endDate: data.current ? "" : formatDisplayDate(data.endDate),
     };
 
-    onChange([...entries, formattedEntry]);
+    let newEntries = [...entries];
+    if (editIndex !== null) {
+      newEntries[editIndex] = formattedEntry; // update existing
+    } else {
+      newEntries.push(formattedEntry); // add new
+    }
 
+    onChange(newEntries);
     reset();
     setIsAdding(false);
+    setEditIndex(null);
   });
 
   const handleDelete = (index) => {
     const newEntries = entries.filter((_, i) => i !== index);
     onChange(newEntries);
+    if (editIndex === index) {
+      reset();
+      setIsAdding(false);
+      setEditIndex(null);
+    }
   };
 
   const {
@@ -76,7 +89,6 @@ export function EntryForm({ type, entries, onChange }) {
     error: improveError,
   } = useFetch(improveWithAI);
 
-  // Add this effect to handle the improvement result
   useEffect(() => {
     if (improvedContent && !isImproving) {
       setValue("description", improvedContent);
@@ -87,7 +99,6 @@ export function EntryForm({ type, entries, onChange }) {
     }
   }, [improvedContent, improveError, isImproving, setValue]);
 
-  // Replace handleImproveDescription with this
   const handleImproveDescription = async () => {
     const description = watch("description");
     if (!description) {
@@ -97,7 +108,25 @@ export function EntryForm({ type, entries, onChange }) {
 
     await improveWithAIFn({
       current: description,
-      type: type.toLowerCase(), // 'experience', 'education', or 'project'
+      type: type.toLowerCase(),
+    });
+  };
+
+  const handleEdit = (index) => {
+    const item = entries[index];
+    setEditIndex(index);
+    setIsAdding(true);
+    reset({
+      title: item.title,
+      organization: item.organization,
+      startDate: item.startDate
+        ? format(parse(item.startDate, "MMM yyyy", new Date()), "yyyy-MM")
+        : "",
+      endDate: item.endDate
+        ? format(parse(item.endDate, "MMM yyyy", new Date()), "yyyy-MM")
+        : "",
+      description: item.description,
+      current: item.current || false,
     });
   };
 
@@ -110,14 +139,24 @@ export function EntryForm({ type, entries, onChange }) {
               <CardTitle className="text-sm font-medium">
                 {item.title} @ {item.organization}
               </CardTitle>
-              <Button
-                variant="outline"
-                size="icon"
-                type="button"
-                onClick={() => handleDelete(index)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  type="button"
+                  onClick={() => handleEdit(index)}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  type="button"
+                  onClick={() => handleDelete(index)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">
@@ -136,7 +175,9 @@ export function EntryForm({ type, entries, onChange }) {
       {isAdding && (
         <Card>
           <CardHeader>
-            <CardTitle>Add {type}</CardTitle>
+            <CardTitle>
+              {editIndex !== null ? `Edit ${type}` : `Add ${type}`}
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -147,7 +188,9 @@ export function EntryForm({ type, entries, onChange }) {
                   error={errors.title}
                 />
                 {errors.title && (
-                  <p className="text-sm text-red-500">{errors.title.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.title.message}
+                  </p>
                 )}
               </div>
               <div className="space-y-2">
@@ -247,13 +290,14 @@ export function EntryForm({ type, entries, onChange }) {
               onClick={() => {
                 reset();
                 setIsAdding(false);
+                setEditIndex(null);
               }}
             >
               Cancel
             </Button>
-            <Button type="button" onClick={handleAdd}>
+            <Button type="button" onClick={handleSave}>
               <PlusCircle className="h-4 w-4 mr-2" />
-              Add Entry
+              {editIndex !== null ? "Save Changes" : "Add Entry"}
             </Button>
           </CardFooter>
         </Card>
@@ -263,7 +307,11 @@ export function EntryForm({ type, entries, onChange }) {
         <Button
           className="w-full"
           variant="outline"
-          onClick={() => setIsAdding(true)}
+          onClick={() => {
+            setIsAdding(true);
+            setEditIndex(null);
+            reset();
+          }}
         >
           <PlusCircle className="h-4 w-4 mr-2" />
           Add {type}
