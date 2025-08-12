@@ -8,7 +8,7 @@ import { ScrollArea, ScrollBar } from './ui/scroll-area';
 export default function ChatBot() {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
-        { text: 'Hi! How can we help you?', sender: 'bot' },
+        { text: `Hi! How can we help you? Example :- Book a meeting, Contact an Expert or a small question related to your career`, sender: 'bot' },
     ]);
     const [input, setInput] = useState('');
     const chatRef = useRef(null);
@@ -111,7 +111,9 @@ export default function ChatBot() {
                     >
                         {/* Header */}
                         <div className="flex items-center justify-between bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-4">
-                            <h2 className="text-lg font-semibold">Chat Support</h2>
+                            <div className="flex flex-col">
+                            <h2 className="text-lg font-semibold">Ask BumbleBee</h2>
+                            </div>
                             <button onClick={() => setIsOpen(false)} className="text-white text-xl">
                                 &times;
                             </button>
