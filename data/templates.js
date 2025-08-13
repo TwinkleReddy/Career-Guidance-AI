@@ -11,6 +11,6 @@ export const templates = [
     before: { src: "/cover-letter-before.png", type: "image" },
     after: { src: "/cover-letter-after.pdf", type: "pdf" },
     description:
-      "Our AI rewrites your cover letter to be more persuasive and tailored to the role.",
+      "Our AI creates your cover letter to be more persuasive and tailored to the role.",
   },
 ];

@@ -25,7 +25,7 @@ export default function Home() {
       <HeroSection />
 
       {/* Features Section */}
-      <section className="w-full py-10 gradient-background">
+      <section className="w-full py-10 pb-20 gradient-background">
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-4xl font-bond text-center mb-16">
             Powerful Features for your Career Growth
@@ -157,47 +157,58 @@ export default function Home() {
 
       {/* Templates Section */}
       {/* Templates Section */}
-      <section className="w-full py-20 bg-background/30">
+      <section className="w-full py-20 bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="container mx-auto px-4 md:px-6">
-          <h2 className="text-4xl font-bond text-center mb-6">
+          <h2 className="text-4xl font-bold text-center mb-4">
             Resume & Cover Letter Templates
           </h2>
           <p className="text-muted-foreground text-center mb-16 max-w-2xl mx-auto">
-            Compare before and after AI-enhanced career documents and see the difference.
+            Compared before and after AI-enhanced career documents and see the difference.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {templates.map((template, index) => (
               <Card
                 key={index}
-                className="shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className="shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-lg rounded-2xl overflow-hidden"
               >
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-bold mb-4">{template.type}</h3>
+                  <h3 className="text-xl font-bold mb-2">{template.type}</h3>
                   <p className="text-muted-foreground mb-6">{template.description}</p>
 
                   <div className="grid grid-cols-2 gap-4">
                     {["before", "after"].map((stage) => {
                       const file = template[stage];
                       return (
-                        <div className="text-center" key={stage}>
-                          <p className="font-semibold mb-2">
-                            {stage.charAt(0).toUpperCase() + stage.slice(1)}
-                          </p>
-                          {file.type === "image" ? (
-                            <Image
-                              src={file.src}
-                              alt={`${template.type} ${stage}`}
-                              width={300}
-                              height={1200}
-                              className="rounded-lg border"
-                            />
-                          ) : (
-                            <iframe
-                              src={file.src}
-                              className="rounded-lg border w-full h-[400px]"
-                            />
-                          )}
+                        <div
+                          className="relative rounded-lg overflow-hidden border bg-white shadow-sm"
+                          key={stage}
+                        >
+                          {/* Label */}
+                          <span className={`absolute top-2 left-2 px-2 py-1 text-xs font-semibold rounded z-10 ${stage === "before"
+                            ? "bg-gray-200 text-gray-800"
+                            : "bg-green-100 text-green-800"
+                            }`}>
+                            {stage === "before" ? "Before AI" : "After AI"}
+                          </span>
+
+                          {/* Aspect Ratio Box */}
+                          <div className="relative w-full pt-[140%]">
+                            {/* This gives a tall aspect ratio similar to a resume page */}
+                            {file.type === "image" ? (
+                              <Image
+                                src={file.src}
+                                alt={`${template.type} ${stage}`}
+                                fill
+                                className="absolute inset-0 object-contain"
+                              />
+                            ) : (
+                              <iframe
+                                src={file.src}
+                                className="absolute inset-0 w-full h-full border-none"
+                              />
+                            )}
+                          </div>
                         </div>
                       );
                     })}
@@ -208,6 +219,26 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <section className="py-20 bg-background/40">
+        <div className="container mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-4">See It in Action</h2>
+          <p className="text-muted-foreground mb-8">
+            Watch how BumbleBee helps you to create a cover letter template with just minimal effort.
+          </p>
+          <div className="relative max-w-6xl mx-auto rounded-2xl overflow-hidden shadow-lg">
+            <video
+              className="w-full"
+              controls
+              poster="/video-thumbnail.png"
+            >
+              <source src="/demo.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </section>
+
+
 
 
       {/* FAQ Section */}
