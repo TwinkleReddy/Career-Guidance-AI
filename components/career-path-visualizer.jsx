@@ -30,9 +30,10 @@ export default function CareerPathVisualizer() {
                 {/* Role Selection */}
                 <Card className="border border-border shadow-lg rounded-3xl">
                     <CardContent className="p-8">
-                        <h2 className="text-xl md:text-3xl font-extrabold mb-6">
+                        <h2 className="text-xl md:text-3xl font-extrabold">
                             Roles in {insight?.industry || "Your Industry"}
                         </h2>
+                        <p className="text-muted-foreground  mb-6 text-sm">Click to see the career path for the respective role</p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {rolesList.map((role, idx) => (
                                 <div

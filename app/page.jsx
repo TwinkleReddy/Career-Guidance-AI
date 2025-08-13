@@ -176,7 +176,7 @@ export default function Home() {
                   <h3 className="text-xl font-bold mb-2">{template.type}</h3>
                   <p className="text-muted-foreground mb-6">{template.description}</p>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     {["before", "after"].map((stage) => {
                       const file = template[stage];
                       return (
@@ -200,7 +200,7 @@ export default function Home() {
                                 src={file.src}
                                 alt={`${template.type} ${stage}`}
                                 fill
-                                className="absolute inset-0 object-contain"
+                                className="absolute inset-0"
                               />
                             ) : (
                               <iframe
@@ -221,7 +221,7 @@ export default function Home() {
       </section>
 
       <section className="py-20 bg-background/40">
-        <div className="container mx-auto text-center">
+        <div className="container mx-auto text-center px-4 md:px-6">
           <h2 className="text-4xl font-bold mb-4">See It in Action</h2>
           <p className="text-muted-foreground mb-8">
             Watch how BumbleBee helps you to create a cover letter template with just minimal effort.
