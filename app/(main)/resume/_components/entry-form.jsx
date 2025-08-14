@@ -109,6 +109,8 @@ export function EntryForm({ type, entries, onChange }) {
     await improveWithAIFn({
       current: description,
       type: type.toLowerCase(),
+      title: watch("title"),
+      organization: watch("organization"),
     });
   };
 
