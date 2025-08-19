@@ -32,8 +32,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import CareerPathVisualizer from "@/components/career-path-visualizer";
-
+import CareerPathVisualizer from "@/components/sections/careerpath/career-path-visualizer";
 const DashboardView = ({ insights }) => {
   const router = useRouter()
   // Transform salary data for the chart

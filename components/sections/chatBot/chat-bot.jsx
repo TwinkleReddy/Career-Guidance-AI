@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ScrollArea, ScrollBar } from './ui/scroll-area';
+import { ScrollArea, ScrollBar } from '../../ui/scroll-area';
 
 export default function ChatBot() {
     const [isOpen, setIsOpen] = useState(false);

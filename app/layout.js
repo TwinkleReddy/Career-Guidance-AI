@@ -5,8 +5,8 @@ import Header from "@/components/header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Toaster } from "sonner";
-import AnimatedBackground from "@/components/animated-background";
-import ChatBot from "@/components/chat-bot";
+import AnimatedBackground from "@/components/sections/animatedBacground/animated-background";
+import ChatBot from "@/components/sections/chatBot/chat-bot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
