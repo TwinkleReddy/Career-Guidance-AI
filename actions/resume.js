@@ -57,7 +57,7 @@ export async function getResume() {
   });
 }
 
-export async function improveWithAI({ current, type }) {
+export async function improveWithAI({ current, type, title, organization }) {
   const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");
 
@@ -71,8 +71,9 @@ export async function improveWithAI({ current, type }) {
   if (!user) throw new Error("User not found");
 
   const prompt = `
-    As an expert resume writer, improve the following ${type} description for a ${user.industry} professional.
-    Make it more impactful, quantifiable, and aligned with industry standards.
+    As an expert resume writer, improve the following ${type} entry for a ${user.industry} professional.
+    The role is "${title}" at "${organization}".
+    Make the description more impactful, quantifiable, and aligned with industry standards.
     Current content: "${current}"
 
     Requirements:
@@ -82,7 +83,8 @@ export async function improveWithAI({ current, type }) {
     4. Keep it concise but detailed
     5. Focus on achievements over responsibilities
     6. Use industry-specific keywords
-    
+    7. Include ${title} and ${organization} for surely
+
     Format the response as a single paragraph without any additional text or explanations.
   `;
 

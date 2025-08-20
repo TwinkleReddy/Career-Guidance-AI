@@ -27,17 +27,14 @@ export async function POST(request) {
       lowerMsg.includes("meeting");
 
     if (isSchedulingRequest) {
-      // You can generate these dynamically too
-      const slots = ["10:00 AM", "1:30 PM", "4:00 PM"];
-
-      return new Response(JSON.stringify({
-        reply: "Sure! Here are some available time slots. Please select one:",
-        type: "slots",
-        slots,
-      }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          reply: "Please choose a time below 👇",
+          type: "calendly",
+          url: "https://calendly.com/kruthikmanubolu/30min",
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      );
     }
 
     // Otherwise, use Gemini to respond
@@ -66,12 +63,15 @@ User's Question: "${message}"
     });
   } catch (error) {
     console.error("Chat API Error:", error);
-    return new Response(JSON.stringify({
-      reply:
-        "Our AI assistant is currently busy. Please try again later or contact us directly at kruthikmanubolu@gmail.com.",
-    }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        reply:
+          "Our AI assistant is currently busy. Please try again later or contact us directly at kruthikmanubolu@gmail.com.",
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 }

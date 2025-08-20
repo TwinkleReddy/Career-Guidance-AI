@@ -2,11 +2,13 @@
 import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 import { Button } from './ui/button'
-import Image from 'next/image'
+import Lottie from 'lottie-react'
+
 
 const HeroSection = () => {
-    const imageRef = useRef(null)
-    const [loading, setLoading] = useState(false)
+    // const imageRef = useRef(null)
+    // const animationRef = useRef(null)
+    // const [loading, setLoading] = useState(false)
 
     const handleClick = async () => {
         setLoading(true)
@@ -14,35 +16,45 @@ const HeroSection = () => {
         setLoading(false)
     }
 
+    const [animationData, setAnimationData] = useState(null);
+
     useEffect(() => {
-        const imageElement = imageRef.current
-        const handleScroll = () => {
-            const scrollPosition = window.scrollY;
-            const scrollThreshold = 100;
+        fetch("/ai-assistant.json")
+            .then((res) => res.json())
+            .then(setAnimationData);
+    }, []);
 
-            if (scrollPosition > scrollThreshold) {
-                imageElement.classList.add("scrolled")
-            }
-            else {
-                imageElement.classList.remove('scrolled')
-            }
-        }
+    if (!animationData) return null; // avoid rendering before data is loaded
 
-        window.addEventListener('scroll', handleScroll)
+    // useEffect(() => {
+    //     const imageElement = imageRef.current
+    //     const handleScroll = () => {
+    //         const scrollPosition = window.scrollY;
+    //         const scrollThreshold = 100;
 
-        return () => window.removeEventListener('scroll', handleScroll)
+    //         if (scrollPosition > scrollThreshold) {
+    //             imageElement.classList.add("scrolled")
+    //         }
+    //         else {
+    //             imageElement.classList.remove('scrolled')
+    //         }
+    //     }
 
-    }, [])
+    //     window.addEventListener('scroll', handleScroll)
+
+    //     return () => window.removeEventListener('scroll', handleScroll)
+
+    // }, [])
     return (
         <section className='w-full pt-24 md:pt-36 pb-10'>
             <div className='space-y-6 text-center'>
                 <div className='space-y-6 mx-auto'>
-                    <h1 className='text-5xl font-bold md:text-6xl lg:text-7xl xl:text-8xl gradient-title'>
+                    <h1 className='text-4xl font-bold md:text-6xl lg:text-7xl xl:text-8xl gradient-title px-2 md:px-0'>
                         Success Starts Here with
                         <br />
                         Your AI Companion
                     </h1>
-                    <p className='mx-auto max-w-[600px] text-muted-foreground md:text-lg'>Your Intelligent Career Companion: AI-Powered Coaching, Customized Guidance, and Tools to Help You Land the Job You Deserve
+                    <p className='mx-auto max-w-[600px] text-muted-foreground md:text-lg px-2 md:px-0'>Your Intelligent Career Companion: AI-Powered Coaching, Customized Guidance, and Tools to Help You Land the Job You Deserve
                     </p>
                 </div>
 
@@ -54,10 +66,13 @@ const HeroSection = () => {
                     </Link>
                 </div>
 
-                <div className='hero-image-wrapper mt-5 mx-2'>
-                    <div ref={imageRef} className='hero-image'>
-                        <Image src={'/banner_gpt.png'} width={1280} height={720} alt='banner bumblebee' className='rounded-lg shadow-2xl border mx-auto w-[400px] md:w-[700px] lg:w-[1000px] xl:w-[1280px]' priority />
-                    </div>
+                <div className='hero-animation-wrapper'>
+                    <Lottie
+                        animationData={animationData}
+                        loop
+                        autoplay
+                        className="md:mx-auto md:w-[700px] lg:w-[1200px]"
+                    />
                 </div>
             </div>
         </section>

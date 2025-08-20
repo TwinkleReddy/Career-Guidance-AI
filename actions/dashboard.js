@@ -22,18 +22,33 @@ Analyze the current state of the ${industry} industry and provide insights in ON
   "recommendedSkills": ["skill1", "skill2", "skill3", "skill4", "skill5"],
   "topCompanies": [
     { "company": "string", "role": "string", "experienceLevel": "1 year" | "2 years" | "3 years" | "3+ years", "salary": number }
+  ],
+  "careerProgression": [
+    {
+      "role": "string",
+      "path": [
+        { "title": "string", "years": number, "description": "string", "icon": "🧑‍💻" }
+      ]
+    }
   ]
 }
 
-IMPORTANT: Return ONLY the JSON. No additional text, notes, or markdown formatting.
-Include at least 5 common roles for salaryRanges.
-Include exactly 5 entries in topCompanies.
-Growth rate should be a percentage number (e.g., 4.5).
+IMPORTANT RULES:
+- Return ONLY the JSON — no extra text, no markdown formatting.
+- Include at least 5 common roles for salaryRanges.
+- Include exactly 5 entries in topCompanies.
+- For careerProgression:
+    - Include one entry for each role from salaryRanges.
+    - Each entry's "path" should have exactly 5 steps, ordered from entry-level to senior-level.
+    - Use clear, realistic descriptions for each step.
+- Growth rate should be a percentage number (e.g., 4.5).
 `;
 
   const result = await model.generateContent(prompt);
   const response = result.response;
   const text = response.text();
+  console.log("Raw Gemini Response:\n", text);
+
   const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
 
   return JSON.parse(cleanedText);
