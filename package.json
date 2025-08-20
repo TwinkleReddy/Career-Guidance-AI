@@ -54,6 +54,7 @@
     "nodemailer": "^7.0.5",
     "pdf-lib": "^1.17.1",
     "react": "^19.0.0",
+    "react-calendly": "^4.4.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.58.1",
     "react-simplemde-editor": "^5.2.0",

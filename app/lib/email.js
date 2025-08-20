@@ -1,18 +1,27 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
+export async function sendOTPEmail(email, slot, otp) {
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Verify Your Booking",
+    text: `You requested to book: ${slot}\n\nYour verification code is: ${otp}\n\nEnter this code in chat to confirm.`,
+  });
+}
 
 export async function sendConfirmationEmail(email, slot) {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_PASS,
-    },
-  });
-
-  return transporter.sendMail({
-    from: `"Meeting Scheduler" <${process.env.GMAIL_USER}>`,
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Meeting Confirmation',
-    html: `<p>Your meeting is booked for <strong>${slot}</strong>.</p>`,
+    subject: "Booking Confirmed ✅",
+    text: `Your booking for ${slot} is confirmed! 🎉`,
   });
 }

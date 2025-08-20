@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ScrollArea, ScrollBar } from '../../ui/scroll-area';
+import CalendlyWidget from '@/components/calendlyWidget/calendly-widget';
 
 export default function ChatBot() {
     const [isOpen, setIsOpen] = useState(false);
@@ -12,6 +13,8 @@ export default function ChatBot() {
     ]);
     const [input, setInput] = useState('');
     const chatRef = useRef(null);
+    const [otpSession, setOtpSession] = useState(null); // store OTP state
+
 
     // Auto scroll to bottom on new message
     useEffect(() => {
@@ -22,6 +25,25 @@ export default function ChatBot() {
 
     const sendMessage = async () => {
         if (!input.trim()) return;
+
+        if (otpSession) {
+            if (input.trim() === otpSession.code.toString()) {
+                setMessages((prev) => [
+                    ...prev,
+                    { text: input, sender: "user" },
+                    { text: "✅ Email verified & booking confirmed!", sender: "bot" },
+                ]);
+                setOtpSession(null);
+            } else {
+                setMessages((prev) => [
+                    ...prev,
+                    { text: input, sender: "user" },
+                    { text: "❌ Invalid OTP. Please try again.", sender: "bot" },
+                ]);
+            }
+            setInput("");
+            return;
+        }
 
         const userMessage = { text: input, sender: 'user' };
         setMessages((prev) => [...prev, userMessage]);
@@ -40,9 +62,22 @@ export default function ChatBot() {
                     ...prev,
                     { text: data.reply, sender: 'bot', type: 'slots', slots: data.slots },
                 ]);
+            } else if (data.type === 'link') {
+                setMessages((prev) => [
+                    ...prev,
+                    { text: data.reply, sender: 'bot' },
+                    { type: 'link', url: data.url, sender: 'bot' },
+                ]);
+            } else if (data.type === 'calendly') {
+                setMessages((prev) => [
+                    ...prev,
+                    { text: data.reply, sender: 'bot' },
+                    { type: 'calendly', url: data.url, sender: 'bot' }, // 👈 Calendly message
+                ]);
             } else {
                 setMessages((prev) => [...prev, { text: data.reply, sender: 'bot' }]);
             }
+
         } catch {
             setMessages((prev) => [
                 ...prev,
@@ -51,8 +86,9 @@ export default function ChatBot() {
         }
     };
 
+
     const handleSlotBooking = async (slot) => {
-        const userMsg = { text: `I'd like to book ${slot}`, sender: 'user' };
+        const userMsg = { text: `I'd like to book ${slot}`, sender: "user" };
         setMessages((prev) => [...prev, userMsg]);
 
         // Step 1: Ask user for email
@@ -60,27 +96,51 @@ export default function ChatBot() {
         if (!email) {
             setMessages((prev) => [
                 ...prev,
-                { text: "Email is required to confirm the booking.", sender: 'bot' },
+                { text: "Email is required to confirm the booking.", sender: "bot" },
             ]);
             return;
         }
 
-        // Step 2: Send booking request with slot + email
         try {
-            const response = await fetch('/api/book-slot', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ slot, email }),
+            // Step 2: Request OTP to be sent
+            const res = await fetch("/api/verify-email", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, slot }), // send slot + email
             });
-            const data = await response.json();
-            setMessages((prev) => [...prev, { text: data.confirmation, sender: 'bot' }]);
-        } catch {
+            const data = await res.json();
+
+            if (data.success) {
+                setOtpSession({ email, slot, code: data.code }); // store OTP in state
+                setMessages((prev) => [
+                    ...prev,
+                    {
+                        text: `We sent a verification code to ${email}. Please type it here to confirm your booking.`,
+                        sender: "bot",
+                    },
+                ]);
+            } else {
+                setMessages((prev) => [
+                    ...prev,
+                    { text: "Failed to send verification email.", sender: "bot" },
+                ]);
+            }
+        } catch (err) {
             setMessages((prev) => [
                 ...prev,
-                { text: 'Failed to book the slot. Please try again.', sender: 'bot' },
+                { text: "Error sending verification email.", sender: "bot" },
             ]);
         }
     };
+
+    // Called after Calendly booking is completed
+    const handleBooking = (email) => {
+        setMessages((prev) => [
+            ...prev,
+            { text: `✅ Booking confirmed for ${email}. We’ll send you the details shortly.`, sender: "bot" }
+        ]);
+    };
+
 
 
     return (
@@ -112,7 +172,7 @@ export default function ChatBot() {
                         {/* Header */}
                         <div className="flex items-center justify-between bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-4">
                             <div className="flex flex-col">
-                            <h2 className="text-lg font-semibold">Ask BumbleBee</h2>
+                                <h2 className="text-lg font-semibold">Ask BumbleBee</h2>
                             </div>
                             <button onClick={() => setIsOpen(false)} className="text-white text-xl">
                                 &times;
@@ -141,6 +201,17 @@ export default function ChatBot() {
                                                     ))}
                                                 </div>
                                             </>
+                                        ) : msg.type === 'link' ? (
+                                            <a
+                                                href={msg.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md text-sm self-start"
+                                            >
+                                                Book via Calendly
+                                            </a>
+                                        ) : msg.type === "calendly" ? (
+                                            <CalendlyWidget url={msg.url} onBooking={handleBooking} />
                                         ) : (
                                             <div
                                                 className={`px-3 py-2 rounded-lg text-sm max-w-[70%] ${msg.sender === 'user'

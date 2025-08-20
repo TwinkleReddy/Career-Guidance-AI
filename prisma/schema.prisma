@@ -96,5 +96,8 @@ model IndustryInsight {
 model Booking {
   id        String   @id @default(cuid())
   slot      String
+  email     String?
+  otp       String?
+  status    String   @default("pending") // pending | confirmed
   createdAt DateTime @default(now())
 }
